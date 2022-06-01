@@ -1,6 +1,7 @@
 package com.isatoltar.trelloclone.card.data;
 
 import com.isatoltar.trelloclone.comment.data.Comment;
+import com.isatoltar.trelloclone.list.data.TaskList;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -30,4 +31,8 @@ public class Card {
 
     @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE)
     Set<Comment> comments;
+
+    @ManyToOne
+    @JoinColumn(name = "list_id", referencedColumnName = "id")
+    TaskList taskList;
 }

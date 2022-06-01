@@ -1,4 +1,4 @@
-package com.isatoltar.trelloclone.card.data;
+package com.isatoltar.trelloclone.list.data;
 
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -10,11 +10,7 @@ import lombok.experimental.FieldDefaults;
 @AllArgsConstructor
 @NoArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-public class CreateCardRequest {
+public class CreateTaskListRequest {
 
-    String title;
-
-    String description;
-
-    Integer listId;
+    String name;
 }

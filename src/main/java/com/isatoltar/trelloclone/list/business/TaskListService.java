@@ -1,0 +1,57 @@
+package com.isatoltar.trelloclone.list.business;
+
+import com.isatoltar.trelloclone.list.data.CreateTaskListRequest;
+import com.isatoltar.trelloclone.list.data.TaskList;
+import com.isatoltar.trelloclone.list.data.TaskListRepository;
+import com.isatoltar.trelloclone.shared.exception.ResourceNotFoundException;
+import lombok.AccessLevel;
+import lombok.RequiredArgsConstructor;
+import lombok.experimental.FieldDefaults;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+
+@Service
+@RequiredArgsConstructor
+@Slf4j
+@FieldDefaults(level = AccessLevel.PRIVATE)
+public class TaskListService {
+
+    final TaskListRepository taskListRepository;
+
+    public void createTaskList(CreateTaskListRequest request) {
+
+        TaskList taskList = new TaskList();
+        taskList.setName(request.getName());
+
+        taskListRepository.save(taskList);
+    }
+
+    public void updateTaskList(Integer listId, String name) {
+
+        TaskList taskList = getTaskListBy(listId);
+        if (taskList == null)
+            throw new ResourceNotFoundException(
+                    String.format("Task list with id = %d does not exists!", listId)
+            );
+
+        if (name != null && !name.equals(taskList.getName())) {
+            taskList.setName(name);
+            taskListRepository.save(taskList);
+        }
+    }
+
+    public TaskList getTaskListBy(Integer listId) {
+        return taskListRepository.findById(listId).orElse(null);
+    }
+
+    public void deleteTaskList(Integer listId) {
+
+        TaskList taskList = getTaskListBy(listId);
+        if (taskList == null)
+            throw new ResourceNotFoundException(
+                    String.format("Task list with id = %d does not exists!", listId)
+            );
+
+        taskListRepository.delete(taskList);
+    }
+}

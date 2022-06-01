@@ -5,6 +5,7 @@ import com.isatoltar.trelloclone.card.data.Card;
 import com.isatoltar.trelloclone.comment.data.Comment;
 import com.isatoltar.trelloclone.comment.data.CommentRepository;
 import com.isatoltar.trelloclone.comment.data.CreateCommentRequest;
+import com.isatoltar.trelloclone.shared.exception.ResourceNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -26,10 +27,10 @@ public class CommentService {
     public void createComment(Integer cardId, CreateCommentRequest request) {
 
         Card card = cardService.getCardById(cardId);
-        if (card == null) {
-            //:TODO Throw card not found exception
-            return;
-        }
+        if (card == null)
+            throw new ResourceNotFoundException(
+                    String.format("Card with id = %d does not exists", cardId)
+            );
 
         Comment comment = new Comment();
         comment.setCard(card);
@@ -42,16 +43,16 @@ public class CommentService {
     public void updateComment(Integer cardId, Integer commentId, String content) {
 
         Boolean cardExists = cardService.doesCardExists(cardId);
-        if (!cardExists) {
-            //: TODO Throw exception for card not found
-            return;
-        }
+        if (!cardExists)
+            throw new ResourceNotFoundException(
+                    String.format("Card with id = %d does not exists", cardId)
+            );
 
         Comment comment = getCommentBy(commentId);
-        if (comment == null) {
-            //: TODO Throw excepton for comment not found
-            return;
-        }
+        if (comment == null)
+            throw new ResourceNotFoundException(
+                    String.format("Comment with id = %d does not exists", commentId)
+            );
 
         if (content != null && !content.equals(comment.getContent())) {
             comment.setContent(content);
@@ -63,16 +64,16 @@ public class CommentService {
     public void deleteComment(Integer cardId, Integer commentId) {
 
         Boolean cardExists = cardService.doesCardExists(cardId);
-        if (!cardExists) {
-            //: TODO Throw exception for card not found
-            return;
-        }
+        if (!cardExists)
+            throw new ResourceNotFoundException(
+                    String.format("Card with id = %d does not exists", cardId)
+            );
 
         Comment comment = getCommentBy(commentId);
-        if (comment == null) {
-            //: TODO Throw excepton for comment not found
-            return;
-        }
+        if (comment == null)
+            throw new ResourceNotFoundException(
+                    String.format("Comment with id = %d does not exists", commentId)
+            );
 
         commentRepository.delete(comment);
 

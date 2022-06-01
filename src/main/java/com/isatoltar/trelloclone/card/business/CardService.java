@@ -3,6 +3,7 @@ package com.isatoltar.trelloclone.card.business;
 import com.isatoltar.trelloclone.card.data.Card;
 import com.isatoltar.trelloclone.card.data.CardRepository;
 import com.isatoltar.trelloclone.card.data.CreateCardRequest;
+import com.isatoltar.trelloclone.shared.exception.ResourceNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -23,6 +24,7 @@ public class CardService {
      * @param request  Card creation request object
      */
     public void createCard(CreateCardRequest request) {
+
         Card card = new Card();
         card.setTitle(request.getTitle());
         card.setDescription(request.getDescription());
@@ -40,10 +42,10 @@ public class CardService {
     public void updateCard(Integer cardId, String title, String description) {
 
         Card card = getCardById(cardId);
-        if (card == null) {
-            //: TODO Throw exception for card not found
-            return;
-        }
+        if (card == null)
+            throw new ResourceNotFoundException(
+                    String.format("Card with id = %d does not exists", cardId)
+            );
 
         boolean cardUpdated = false;
 
@@ -68,11 +70,12 @@ public class CardService {
      * @param cardId  Id of card to be deleted
      */
     public void deleteCard(Integer cardId) {
+
         Card card = getCardById(cardId);
-        if (card == null) {
-            //: TODO Throw exception for card not found
-            return;
-        }
+        if (card == null)
+            throw new ResourceNotFoundException(
+                    String.format("Card with id = %d does not exists", cardId)
+            );
 
         cardRepository.delete(card);
     }
