@@ -77,7 +77,11 @@ public class CardService {
         cardRepository.delete(card);
     }
 
-    private Card getCardById(Integer id) {
+    public Card getCardById(Integer id) {
         return cardRepository.findById(id).orElse(null);
+    }
+
+    public Boolean doesCardExists(Integer cardId) {
+        return cardRepository.existsById(cardId);
     }
 }
