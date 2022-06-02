@@ -34,7 +34,7 @@ public class TaskListController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PatchMapping("/{listId}")
+    @DeleteMapping("/{listId}")
     public ResponseEntity<?> deleteTaskList(@PathVariable Integer listId) {
 
         taskListService.deleteTaskList(listId);

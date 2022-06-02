@@ -25,6 +25,6 @@ public class TaskList {
     @Column
     String name;
 
-    @OneToMany(mappedBy = "list", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "taskList", cascade = CascadeType.REMOVE)
     Set<Card> cards;
 }
