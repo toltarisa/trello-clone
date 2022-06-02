@@ -9,8 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+@RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@RequestMapping("/cards")
 public class CommentController {
 
     final CommentService commentService;
@@ -24,7 +26,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PostMapping("/{cardId}/comments/{commentId}")
+    @PatchMapping("/{cardId}/comments/{commentId}")
     public ResponseEntity<?> updateComment(@PathVariable Integer cardId,
                                            @PathVariable Integer commentId,
                                            @RequestParam(required = false) String content) {
@@ -34,7 +36,7 @@ public class CommentController {
         return ResponseEntity.status(HttpStatus.OK).build();
     }
 
-    @PostMapping("/{cardId}/comments/{commentId}")
+    @DeleteMapping("/{cardId}/comments/{commentId}")
     public ResponseEntity<?> deleteComment(@PathVariable Integer cardId,
                                            @PathVariable Integer commentId) {
 

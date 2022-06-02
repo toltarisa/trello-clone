@@ -3,6 +3,8 @@ package com.isatoltar.trelloclone.card.business;
 import com.isatoltar.trelloclone.card.data.Card;
 import com.isatoltar.trelloclone.card.data.CardRepository;
 import com.isatoltar.trelloclone.card.data.CreateCardRequest;
+import com.isatoltar.trelloclone.list.business.TaskListService;
+import com.isatoltar.trelloclone.list.data.TaskList;
 import com.isatoltar.trelloclone.shared.exception.ResourceNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +20,8 @@ public class CardService {
 
     final CardRepository cardRepository;
 
+    final TaskListService taskListService;
+
     /**
      * Creates new Card with given parameters
      *
@@ -25,9 +29,16 @@ public class CardService {
      */
     public void createCard(CreateCardRequest request) {
 
+        Integer listId = request.getListId();
+        TaskList taskList = taskListService.getTaskListBy(listId);
+        if (taskList == null) {
+            throw new ResourceNotFoundException(String.format("List with id = %d does not exists", listId));
+        }
+
         Card card = new Card();
         card.setTitle(request.getTitle());
         card.setDescription(request.getDescription());
+        card.setTaskList(taskList);
 
         cardRepository.save(card);
     }
