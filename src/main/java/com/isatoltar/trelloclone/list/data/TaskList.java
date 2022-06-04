@@ -1,5 +1,6 @@
 package com.isatoltar.trelloclone.list.data;
 
+import com.isatoltar.trelloclone.board.data.Board;
 import com.isatoltar.trelloclone.card.data.Card;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
@@ -27,4 +28,8 @@ public class TaskList {
 
     @OneToMany(mappedBy = "taskList", cascade = CascadeType.REMOVE)
     Set<Card> cards;
+
+    @ManyToOne
+    @JoinColumn(name = "board_id", referencedColumnName = "id")
+    Board board;
 }
