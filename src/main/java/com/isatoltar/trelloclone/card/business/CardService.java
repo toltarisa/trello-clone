@@ -31,9 +31,6 @@ public class CardService {
 
         Integer listId = request.getListId();
         TaskList taskList = taskListService.getTaskListBy(listId);
-        if (taskList == null) {
-            throw new ResourceNotFoundException(String.format("List with id = %d does not exists", listId));
-        }
 
         Card card = new Card();
         card.setTitle(request.getTitle());
@@ -53,10 +50,6 @@ public class CardService {
     public void updateCard(Integer cardId, String title, String description) {
 
         Card card = getCardById(cardId);
-        if (card == null)
-            throw new ResourceNotFoundException(
-                    String.format("Card with id = %d does not exists", cardId)
-            );
 
         boolean cardUpdated = false;
 
@@ -72,7 +65,6 @@ public class CardService {
 
         if (cardUpdated)
             cardRepository.save(card);
-
     }
 
     /**
@@ -81,18 +73,13 @@ public class CardService {
      * @param cardId  Id of card to be deleted
      */
     public void deleteCard(Integer cardId) {
-
-        Card card = getCardById(cardId);
-        if (card == null)
-            throw new ResourceNotFoundException(
-                    String.format("Card with id = %d does not exists", cardId)
-            );
-
-        cardRepository.delete(card);
+        cardRepository.delete(getCardById(cardId));
     }
 
-    public Card getCardById(Integer id) {
-        return cardRepository.findById(id).orElse(null);
+    public Card getCardById(Integer cardId) {
+        return cardRepository.findById(cardId).orElseThrow(() -> new ResourceNotFoundException(
+                String.format("Card with id = %d does not exists", cardId)
+        ));
     }
 
     public Boolean doesCardExists(Integer cardId) {

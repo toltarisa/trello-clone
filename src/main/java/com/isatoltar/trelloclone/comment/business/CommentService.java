@@ -27,10 +27,6 @@ public class CommentService {
     public void createComment(Integer cardId, CreateCommentRequest request) {
 
         Card card = cardService.getCardById(cardId);
-        if (card == null)
-            throw new ResourceNotFoundException(
-                    String.format("Card with id = %d does not exists", cardId)
-            );
 
         Comment comment = new Comment();
         comment.setCard(card);
@@ -49,10 +45,6 @@ public class CommentService {
             );
 
         Comment comment = getCommentBy(commentId);
-        if (comment == null)
-            throw new ResourceNotFoundException(
-                    String.format("Comment with id = %d does not exists", commentId)
-            );
 
         if (content != null && !content.equals(comment.getContent())) {
             comment.setContent(content);
@@ -69,18 +61,15 @@ public class CommentService {
                     String.format("Card with id = %d does not exists", cardId)
             );
 
-        Comment comment = getCommentBy(commentId);
-        if (comment == null)
-            throw new ResourceNotFoundException(
-                    String.format("Comment with id = %d does not exists", commentId)
-            );
-
-        commentRepository.delete(comment);
+        commentRepository.delete(getCommentBy(commentId));
 
     }
 
     public Comment getCommentBy(Integer commentId) {
-        return commentRepository.findById(commentId).orElse(null);
+        return commentRepository.findById(commentId)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(String.format("Comment with id = %d does not exists", commentId))
+                );
     }
 
     private void saveComment(Comment comment) {

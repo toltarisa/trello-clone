@@ -29,10 +29,6 @@ public class TaskListService {
     public void updateTaskList(Integer listId, String name) {
 
         TaskList taskList = getTaskListBy(listId);
-        if (taskList == null)
-            throw new ResourceNotFoundException(
-                    String.format("Task list with id = %d does not exists!", listId)
-            );
 
         if (name != null && !name.equals(taskList.getName())) {
             taskList.setName(name);
@@ -41,17 +37,12 @@ public class TaskListService {
     }
 
     public TaskList getTaskListBy(Integer listId) {
-        return taskListRepository.findById(listId).orElse(null);
+        return taskListRepository.findById(listId).orElseThrow(() -> new ResourceNotFoundException(
+                String.format("Task list with id = %d does not exists!", listId)
+        ));
     }
 
     public void deleteTaskList(Integer listId) {
-
-        TaskList taskList = getTaskListBy(listId);
-        if (taskList == null)
-            throw new ResourceNotFoundException(
-                    String.format("Task list with id = %d does not exists!", listId)
-            );
-
-        taskListRepository.delete(taskList);
+        taskListRepository.delete(getTaskListBy(listId));
     }
 }

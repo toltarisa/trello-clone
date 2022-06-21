@@ -33,11 +33,6 @@ public class BoardService {
     public void updateBoard(Integer boardId, String name) {
 
         Board board = getBoardBy(boardId);
-        if (board == null)
-            throw new ResourceNotFoundException(
-                    String.format("Board with id = %d does not exists!", boardId)
-            );
-
         boolean updated = false;
 
         if (name != null && !name.equals(board.getName())) {
@@ -50,17 +45,12 @@ public class BoardService {
     }
 
     public Board getBoardBy(Integer boardId) {
-        return boardRepository.findById(boardId).orElse(null);
+        return boardRepository.findById(boardId).orElseThrow(
+                () -> new ResourceNotFoundException(String.format("Board with id = %d does not exists!", boardId))
+        );
     }
 
     public void deleteBoard(Integer boardId) {
-
-        Board board = getBoardBy(boardId);
-        if (board == null)
-            throw new ResourceNotFoundException(
-                    String.format("Board with id = %d does not exists!", boardId)
-            );
-
-        boardRepository.delete(board);
+        boardRepository.delete(getBoardBy(boardId));
     }
 }
