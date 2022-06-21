@@ -2,10 +2,7 @@ package com.isatoltar.trelloclone.list.data;
 
 import com.isatoltar.trelloclone.board.data.Board;
 import com.isatoltar.trelloclone.card.data.Card;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
@@ -16,6 +13,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class TaskList {
 

@@ -2,10 +2,7 @@ package com.isatoltar.trelloclone.card.data;
 
 import com.isatoltar.trelloclone.comment.data.Comment;
 import com.isatoltar.trelloclone.list.data.TaskList;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import lombok.experimental.FieldDefaults;
 
 import javax.persistence.*;
@@ -16,6 +13,7 @@ import java.util.Set;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class Card {
 

@@ -20,8 +20,9 @@ public class TaskListService {
 
     public void createTaskList(CreateTaskListRequest request) {
 
-        TaskList taskList = new TaskList();
-        taskList.setName(request.getName());
+        TaskList taskList = TaskList.builder()
+                .name(request.getName())
+                .build();
 
         taskListRepository.save(taskList);
     }

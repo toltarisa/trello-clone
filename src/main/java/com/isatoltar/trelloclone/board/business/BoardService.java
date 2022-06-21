@@ -20,8 +20,8 @@ public class BoardService {
 
     public void createBoard(CreateBoardRequest request) {
 
-        Board board = new Board();
-        board.setName(request.getName());
+        Board board = Board.builder()
+                .name(request.getName()).build();
 
         saveBoard(board);
     }

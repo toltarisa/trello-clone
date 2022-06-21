@@ -32,10 +32,10 @@ public class CardService {
         Integer listId = request.getListId();
         TaskList taskList = taskListService.getTaskListBy(listId);
 
-        Card card = new Card();
-        card.setTitle(request.getTitle());
-        card.setDescription(request.getDescription());
-        card.setTaskList(taskList);
+        Card card = Card.builder()
+                .title(request.getTitle())
+                .description(request.getDescription())
+                .taskList(taskList).build();
 
         cardRepository.save(card);
     }

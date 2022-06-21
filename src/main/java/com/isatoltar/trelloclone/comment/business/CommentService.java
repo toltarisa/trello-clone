@@ -28,10 +28,11 @@ public class CommentService {
 
         Card card = cardService.getCardById(cardId);
 
-        Comment comment = new Comment();
-        comment.setCard(card);
-        comment.setContent(request.getContent());
-        comment.setUserId(request.getUserId());
+        Comment comment = Comment.builder()
+                .content(request.getContent())
+                .userId(request.getUserId())
+                .card(card)
+                .build();
 
         saveComment(comment);
     }
