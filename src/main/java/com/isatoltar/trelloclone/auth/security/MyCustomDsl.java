@@ -17,17 +17,15 @@ public class MyCustomDsl extends AbstractHttpConfigurer<MyCustomDsl, HttpSecurit
     }
 
     @Override
-    public void configure(HttpSecurity http) throws Exception {
+    public void configure(HttpSecurity http) {
         AuthenticationManager authenticationManager = http.getSharedObject(AuthenticationManager.class);
 
         http
-            .addFilter(new JwtAuthenticationFilter(authenticationManager))
-            .addFilterBefore(new JwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
+                .addFilter(new JwtAuthenticationFilter(authenticationManager))
+                .addFilterBefore(new JwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
     public static MyCustomDsl customDsl() {
         return new MyCustomDsl();
     }
-
-
 }

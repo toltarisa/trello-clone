@@ -22,9 +22,12 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -61,7 +64,7 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .setIssuedAt(new Date())
                 .setExpiration((Date.from(Instant.now().plus(2, ChronoUnit.HOURS))))
                 .claim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .signWith(SignatureAlgorithm.HS512, "s3cret")
+                .signWith(SignatureAlgorithm.HS512, "s3cret".getBytes(StandardCharsets.UTF_8))
                 .compact();
 
         String refreshToken = Jwts.builder()
@@ -69,19 +72,16 @@ public class JwtAuthenticationFilter extends UsernamePasswordAuthenticationFilte
                 .setIssuedAt(new Date())
                 .setExpiration((Date.from(Instant.now().plus(3, ChronoUnit.DAYS))))
                 .claim("roles", user.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
-                .signWith(SignatureAlgorithm.HS512, "s3cret")
+                .signWith(SignatureAlgorithm.HS512, "s3cret".getBytes(StandardCharsets.UTF_8))
                 .compact();
 
-        Cookie accessTokenCookie = new Cookie("accessToken", accessToken);
-        accessTokenCookie.setHttpOnly(true);
-        accessTokenCookie.setSecure(true);
+        Map<String, String> tokenResponse = new HashMap<>();
+        tokenResponse.put("accessToken", accessToken);
+        tokenResponse.put("refreshToken", refreshToken);
 
-        Cookie refreshTokenCookie = new Cookie("refreshToken", refreshToken);
-        refreshTokenCookie.setHttpOnly(true);
-        refreshTokenCookie.setSecure(true);
-
-        response.addCookie(accessTokenCookie);
-        response.addCookie(refreshTokenCookie);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
         response.setStatus(201);
+        response.getWriter().write(new ObjectMapper().writeValueAsString(tokenResponse));
     }
 }
