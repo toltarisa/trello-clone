@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.security.servlet.SecurityAutoConfi
 import org.springframework.context.annotation.Bean;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
+import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
 
 @SpringBootApplication(exclude = SecurityAutoConfiguration.class)
 public class TrelloCloneApplication {
@@ -16,11 +17,13 @@ public class TrelloCloneApplication {
 
 	@Bean
 	public WebMvcConfigurer corsConfigurer() {
-		return new WebMvcConfigurer() {
+		return new WebMvcConfigurerAdapter() {
 			@Override
 			public void addCorsMappings(CorsRegistry registry) {
-				registry.addMapping("/login").allowedOrigins("http://localhost:3000")
-						.allowCredentials(true);
+				registry.addMapping("/**")
+						.allowedMethods("*")
+						.allowedHeaders("*")
+						.allowedOrigins("http://localhost:3000");
 			}
 		};
 	}

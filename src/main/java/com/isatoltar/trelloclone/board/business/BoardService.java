@@ -1,6 +1,9 @@
 package com.isatoltar.trelloclone.board.business;
 
+import com.isatoltar.trelloclone.auth.business.UserService;
+import com.isatoltar.trelloclone.auth.data.User;
 import com.isatoltar.trelloclone.board.data.Board;
+import com.isatoltar.trelloclone.board.data.BoardDto;
 import com.isatoltar.trelloclone.board.data.BoardRepository;
 import com.isatoltar.trelloclone.board.data.CreateBoardRequest;
 import com.isatoltar.trelloclone.shared.exception.ResourceNotFoundException;
@@ -10,6 +13,10 @@ import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
@@ -17,11 +24,27 @@ import org.springframework.stereotype.Service;
 public class BoardService {
 
     final BoardRepository boardRepository;
+    final UserService userService;
 
-    public void createBoard(CreateBoardRequest request) {
+    public List<BoardDto> getAllBoardsOfUser(String username) {
+
+        Integer userId = userService.getUserByUsername(username).getId();
+
+        List<Board> boards = boardRepository.findAllByUserId(userId);
+        if (boards == null)
+            return Collections.emptyList();
+
+        return boards.stream()
+                .map(board -> new BoardDto(board.getId(), board.getName()))
+                .collect(Collectors.toList());
+    }
+
+    public void createBoard(CreateBoardRequest request, String username) {
+
+        User user = userService.getUserByUsername(username);
 
         Board board = Board.builder()
-                .name(request.getName()).build();
+                .name(request.getName()).user(user).build();
 
         saveBoard(board);
     }

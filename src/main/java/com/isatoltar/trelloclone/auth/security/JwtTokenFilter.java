@@ -19,6 +19,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -38,9 +40,10 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             try {
                 String token = authHeader.split("Bearer ")[1];
-                String userName = Jwts.parser().setSigningKey("s3cret").parseClaimsJws(token).getBody().getSubject();
+                byte[] secret = "s3cret".getBytes(StandardCharsets.UTF_8);
+                String userName = Jwts.parser().setSigningKey("s3cret".getBytes()).parseClaimsJws(token).getBody().getSubject();
 
-                List<String> authorities = (List<String>) Jwts.parser().setSigningKey("s3cret")
+                List<String> authorities = (List<String>) Jwts.parser().setSigningKey(secret)
                         .parseClaimsJws(token).getBody().get("roles");
 
                 UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(

@@ -1,14 +1,17 @@
 package com.isatoltar.trelloclone.board.web;
 
 import com.isatoltar.trelloclone.board.business.BoardService;
+import com.isatoltar.trelloclone.board.data.BoardDto;
 import com.isatoltar.trelloclone.board.data.CreateBoardRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
-import org.apache.coyote.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+import java.util.List;
 
 @RestController
 @RequiredArgsConstructor
@@ -18,10 +21,21 @@ public class BoardController {
 
     final BoardService boardService;
 
-    @PostMapping
-    public ResponseEntity<?> createBoard(@RequestBody CreateBoardRequest request) {
+    @GetMapping
+    public ResponseEntity<?> getBoards(Principal principal) {
 
-        boardService.createBoard(request);
+        String username = principal.getName();
+        List<BoardDto> dtoList = boardService.getAllBoardsOfUser(username);
+
+        return ResponseEntity.ok(dtoList);
+    }
+
+    @PostMapping
+    public ResponseEntity<?> createBoard(Principal principal,
+                                         @RequestBody CreateBoardRequest request) {
+
+        String username = principal.getName();
+        boardService.createBoard(request, username);
 
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

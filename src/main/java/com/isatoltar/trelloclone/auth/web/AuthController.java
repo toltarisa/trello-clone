@@ -10,16 +10,13 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/register")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "http://localhost:3000", maxAge = 3600)
 public class AuthController {
 
     final UserService userService;
 
     @PostMapping
     public ResponseEntity<?> register(@RequestBody RegisterRequest request) {
-
         userService.registerUser(request);
-
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 }

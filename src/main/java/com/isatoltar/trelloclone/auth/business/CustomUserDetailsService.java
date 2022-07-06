@@ -21,17 +21,12 @@ import java.util.stream.Collectors;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 public class CustomUserDetailsService implements UserDetailsService {
 
-    final UserRepository userRepository;
-    final RoleRepository roleRepository;
+    final UserService userService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
-        User user = userRepository.findByUsername(username);
-        if (user == null)
-            throw new UsernameNotFoundException(
-                    String.format("User with username = %s does not exists", username)
-            );
+        User user = userService.getUserByUsername(username);
 
         Set<GrantedAuthority> authorities = user.getRoles().stream()
                 .map(role -> new SimpleGrantedAuthority(role.getName()))

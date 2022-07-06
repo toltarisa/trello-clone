@@ -5,6 +5,7 @@ import com.isatoltar.trelloclone.auth.data.Role;
 import com.isatoltar.trelloclone.auth.data.User;
 import com.isatoltar.trelloclone.auth.data.UserRepository;
 import com.isatoltar.trelloclone.shared.exception.ResourceAlreadyExistsException;
+import com.isatoltar.trelloclone.shared.exception.ResourceNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
@@ -27,7 +28,7 @@ public class UserService {
     public void registerUser(RegisterRequest request) {
 
         String username = request.getUsername();
-        User user = userRepository.findByUsername(username);
+        User user = getUserByUsername(username);
         if (user != null)
             throw new ResourceAlreadyExistsException(
                     String.format("User with username = %s already exists", username)
@@ -42,5 +43,12 @@ public class UserService {
         user.setRoles(roles);
 
         userRepository.save(user);
+    }
+
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username)
+                .orElseThrow(() ->
+                        new ResourceNotFoundException(String.format("User with username = %s does not exists", username))
+                );
     }
 }
