@@ -9,37 +9,59 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.constraints.Positive;
+
 @RestController
 @RequiredArgsConstructor
 @FieldDefaults(level = AccessLevel.PRIVATE)
-@RequestMapping("/cards")
+@RequestMapping("/lists")
 public class CardController {
 
     final CardService cardService;
 
-    @PostMapping
-    public ResponseEntity<?> createCard(@RequestBody CreateCardRequest request) {
+    /**
+     * C1: Creates new card
+     *
+     * @param listId    Id of the list where the card will be saved
+     * @param request   New card informations
+     * @return          HTTP 201
+     */
+    @PostMapping("/{listId}/cards")
+    public ResponseEntity<?> createCard(@PathVariable @Positive Integer listId,
+                                        @RequestBody CreateCardRequest request) {
 
-        cardService.createCard(request);
-
+        cardService.createCard(listId, request);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PatchMapping("/{cardId}")
-    public ResponseEntity<?> updateCard(@PathVariable Integer cardId,
+    /**
+     * C2: Updates the card with given id
+     *
+     * @param listId        The id of the list where the card will be updated
+     * @param cardId        The id of the card to be updated
+     * @param title         New title of the card
+     * @param description   New description of the card
+     * @return              HTTP 204
+     */
+    @PatchMapping("/{listId}/cards/{cardId}")
+    public ResponseEntity<?> updateCard(@PathVariable @Positive Integer listId,
+                                        @PathVariable Integer cardId,
                                         @RequestParam(required = false) String title,
                                         @RequestParam(required = false) String description) {
 
-        cardService.updateCard(cardId, title, description);
-
-        return ResponseEntity.status(HttpStatus.OK).build();
+        cardService.updateCard(listId, cardId, title, description);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    /**
+     * C3: Deletes the card with given id
+     *
+     * @param cardId    The id of the card to be deleted
+     * @return          HTTP 204
+     */
     @DeleteMapping("/{cardId}")
     public ResponseEntity<?> deleteCard(@PathVariable Integer cardId) {
-
         cardService.deleteCard(cardId);
-
-        return ResponseEntity.status(HttpStatus.OK).build();
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 }

@@ -26,7 +26,7 @@ public class CommentService {
 
     public void createComment(Integer cardId, CreateCommentRequest request) {
 
-        Card card = cardService.getCardById(cardId);
+        Card card = cardService.getCardBy(cardId);
 
         Comment comment = Comment.builder()
                 .content(request.getContent())

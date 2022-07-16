@@ -1,7 +1,6 @@
 package com.isatoltar.trelloclone.board.business;
 
 import com.isatoltar.trelloclone.auth.business.UserService;
-import com.isatoltar.trelloclone.auth.data.User;
 import com.isatoltar.trelloclone.board.data.Board;
 import com.isatoltar.trelloclone.board.data.BoardDto;
 import com.isatoltar.trelloclone.board.data.BoardRepository;
@@ -27,12 +26,9 @@ public class BoardService {
     final UserService userService;
 
     public List<BoardDto> getAllBoardsOfUser(String username) {
-
         Integer userId = userService.getUserByUsername(username).getId();
-
-        List<Board> boards = boardRepository.findAllByUserId(userId);
-        if (boards == null)
-            return Collections.emptyList();
+        List<Board> boards = boardRepository.findAllByUserId(userId)
+                .orElse(Collections.emptyList());
 
         return boards.stream()
                 .map(board -> new BoardDto(board.getId(), board.getName()))
@@ -40,13 +36,12 @@ public class BoardService {
     }
 
     public void createBoard(CreateBoardRequest request, String username) {
-
-        User user = userService.getUserByUsername(username);
-
-        Board board = Board.builder()
-                .name(request.getName()).user(user).build();
-
-        saveBoard(board);
+        saveBoard(
+                Board.builder()
+                        .name(request.getName())
+                        .user(userService.getUserByUsername(username))
+                        .build()
+        );
     }
 
     private void saveBoard(Board board) {
@@ -54,7 +49,6 @@ public class BoardService {
     }
 
     public void updateBoard(Integer boardId, String name) {
-
         Board board = getBoardBy(boardId);
         boolean updated = false;
 

@@ -15,6 +15,4 @@ public class CreateCardRequest {
     String title;
 
     String description;
-
-    Integer listId;
 }
