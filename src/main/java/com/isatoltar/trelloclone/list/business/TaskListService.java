@@ -40,7 +40,7 @@ public class TaskListService {
                 .orElse(Collections.emptyList());
 
         return taskList.stream()
-                .map(list -> new TaskListDTO(list.getId(), list.getName(), list.getBoard().getId()))
+                .map(list -> new TaskListDTO(list.getId(), list.getName(), boardId))
                 .collect(Collectors.toList());
     }
 
