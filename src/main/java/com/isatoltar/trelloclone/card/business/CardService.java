@@ -1,6 +1,7 @@
 package com.isatoltar.trelloclone.card.business;
 
 import com.isatoltar.trelloclone.card.data.Card;
+import com.isatoltar.trelloclone.card.data.CardDTO;
 import com.isatoltar.trelloclone.card.data.CardRepository;
 import com.isatoltar.trelloclone.card.data.CreateCardRequest;
 import com.isatoltar.trelloclone.list.business.TaskListService;
@@ -10,6 +11,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.experimental.FieldDefaults;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -29,6 +34,15 @@ public class CardService {
                 .build();
 
         cardRepository.save(card);
+    }
+
+    public List<CardDTO> getCards(Integer listId) {
+        List<Card> cards = cardRepository.getCardsOfList(listId)
+                .orElse(Collections.emptyList());
+
+        return cards.stream()
+                .map(card -> new CardDTO(card.getId(), card.getTitle(), card.getDescription()))
+                .collect(Collectors.toList());
     }
 
     public void updateCard(Integer listId, Integer cardId, String title, String description) {

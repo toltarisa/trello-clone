@@ -35,7 +35,20 @@ public class CardController {
     }
 
     /**
-     * C2: Updates the card with given id
+     * C2: List cards of list
+     *
+     * @param listId    Id of the list where the card will be saved
+     * @return          HTTP 201
+     */
+    @GetMapping("/{listId}/cards")
+    public ResponseEntity<?> getCards(@PathVariable @Positive Integer listId) {
+        return ResponseEntity.ok(
+                cardService.getCards(listId)
+        );
+    }
+
+    /**
+     * C3: Updates the card with given id
      *
      * @param listId        The id of the list where the card will be updated
      * @param cardId        The id of the card to be updated
@@ -54,7 +67,7 @@ public class CardController {
     }
 
     /**
-     * C3: Deletes the card with given id
+     * C4: Deletes the card with given id
      *
      * @param cardId    The id of the card to be deleted
      * @return          HTTP 204
