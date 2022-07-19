@@ -29,11 +29,10 @@ public class TaskListController {
      * @return          HTTP 201
      */
     @PostMapping("/{boardId}/lists")
-    public ResponseEntity<?> createTaskList(@PathVariable @Positive Integer boardId,
+    public ResponseEntity<TaskListDTO> createTaskList(@PathVariable @Positive Integer boardId,
                                             @RequestBody CreateTaskListRequest request) {
 
-        taskListService.createTaskList(boardId, request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(taskListService.createTaskList(boardId, request));
     }
 
     /**

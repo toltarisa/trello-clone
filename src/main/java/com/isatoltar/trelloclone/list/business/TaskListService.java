@@ -1,10 +1,7 @@
 package com.isatoltar.trelloclone.list.business;
 
 import com.isatoltar.trelloclone.board.business.BoardService;
-import com.isatoltar.trelloclone.list.data.CreateTaskListRequest;
-import com.isatoltar.trelloclone.list.data.TaskList;
-import com.isatoltar.trelloclone.list.data.TaskListDTO;
-import com.isatoltar.trelloclone.list.data.TaskListRepository;
+import com.isatoltar.trelloclone.list.data.*;
 import com.isatoltar.trelloclone.shared.exception.ResourceNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -23,16 +20,16 @@ import java.util.stream.Collectors;
 public class TaskListService {
 
     final TaskListRepository taskListRepository;
-
+    final TaskListDtoConverter taskListDtoConverter;
     final BoardService boardService;
 
-    public void createTaskList(Integer boardId, CreateTaskListRequest request) {
+    public TaskListDTO createTaskList(Integer boardId, CreateTaskListRequest request) {
         TaskList taskList = TaskList.builder()
                 .name(request.getName())
                 .board(boardService.getBoardBy(boardId))
                 .build();
 
-        taskListRepository.save(taskList);
+        return taskListDtoConverter.convertTo(taskListRepository.save(taskList));
     }
 
     public List<TaskListDTO> getTaskListOf(Integer boardId) {

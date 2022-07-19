@@ -11,4 +11,9 @@ public class TaskListDTO {
     Integer id;
     String name;
     Integer boardId;
+
+    public TaskListDTO(Integer id, String name) {
+        this.id = id;
+        this.name = name;
+    }
 }

@@ -1,10 +1,7 @@
 package com.isatoltar.trelloclone.board.business;
 
 import com.isatoltar.trelloclone.auth.business.UserService;
-import com.isatoltar.trelloclone.board.data.Board;
-import com.isatoltar.trelloclone.board.data.BoardDto;
-import com.isatoltar.trelloclone.board.data.BoardRepository;
-import com.isatoltar.trelloclone.board.data.CreateBoardRequest;
+import com.isatoltar.trelloclone.board.data.*;
 import com.isatoltar.trelloclone.shared.exception.ResourceNotFoundException;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -23,6 +20,7 @@ import java.util.stream.Collectors;
 public class BoardService {
 
     final BoardRepository boardRepository;
+    final BoardDtoConverter boardDtoConverter;
     final UserService userService;
 
     public List<BoardDto> getAllBoardsOfUser(String username) {
@@ -35,17 +33,17 @@ public class BoardService {
                 .collect(Collectors.toList());
     }
 
-    public void createBoard(CreateBoardRequest request, String username) {
-        saveBoard(
+    public BoardDto createBoard(CreateBoardRequest request, String username) {
+        return boardDtoConverter.convertTo(saveBoard(
                 Board.builder()
                         .name(request.getName())
                         .user(userService.getUserByUsername(username))
                         .build()
-        );
+        ));
     }
 
-    private void saveBoard(Board board) {
-        boardRepository.save(board);
+    private Board saveBoard(Board board) {
+        return boardRepository.save(board);
     }
 
     public void updateBoard(Integer boardId, String name) {

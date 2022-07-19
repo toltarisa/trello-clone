@@ -27,7 +27,7 @@ public class Card {
     @Column
     String description;
 
-    @OneToMany(mappedBy = "card", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "card", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     Set<Comment> comments;
 
     @ManyToOne

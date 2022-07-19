@@ -1,6 +1,7 @@
 package com.isatoltar.trelloclone.card.web;
 
 import com.isatoltar.trelloclone.card.business.CardService;
+import com.isatoltar.trelloclone.card.data.CardDTO;
 import com.isatoltar.trelloclone.card.data.CreateCardRequest;
 import lombok.AccessLevel;
 import lombok.RequiredArgsConstructor;
@@ -27,11 +28,10 @@ public class CardController {
      * @return          HTTP 201
      */
     @PostMapping("/{listId}/cards")
-    public ResponseEntity<?> createCard(@PathVariable @Positive Integer listId,
-                                        @RequestBody CreateCardRequest request) {
+    public ResponseEntity<CardDTO> createCard(@PathVariable @Positive Integer listId,
+                                              @RequestBody CreateCardRequest request) {
 
-        cardService.createCard(listId, request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
+        return ResponseEntity.status(HttpStatus.CREATED).body(cardService.createCard(listId, request));
     }
 
     /**
@@ -72,7 +72,7 @@ public class CardController {
      * @param cardId    The id of the card to be deleted
      * @return          HTTP 204
      */
-    @DeleteMapping("/{cardId}")
+    @DeleteMapping("/{listId}/cards/{cardId}")
     public ResponseEntity<?> deleteCard(@PathVariable Integer cardId) {
         cardService.deleteCard(cardId);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();

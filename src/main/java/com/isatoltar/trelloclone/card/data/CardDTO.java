@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CardDTO {
     Integer id;
+    Integer listId;
     String title;
     String description;
 }

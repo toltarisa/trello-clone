@@ -1,9 +1,6 @@
 package com.isatoltar.trelloclone.card.business;
 
-import com.isatoltar.trelloclone.card.data.Card;
-import com.isatoltar.trelloclone.card.data.CardDTO;
-import com.isatoltar.trelloclone.card.data.CardRepository;
-import com.isatoltar.trelloclone.card.data.CreateCardRequest;
+import com.isatoltar.trelloclone.card.data.*;
 import com.isatoltar.trelloclone.list.business.TaskListService;
 import com.isatoltar.trelloclone.shared.exception.ResourceNotFoundException;
 import lombok.AccessLevel;
@@ -14,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -23,17 +22,17 @@ import java.util.stream.Collectors;
 public class CardService {
 
     final CardRepository cardRepository;
-
+    final CardDtoConverter cardDtoConverter;
     final TaskListService taskListService;
 
-    public void createCard(Integer listId, CreateCardRequest request) {
+    public CardDTO createCard(Integer listId, CreateCardRequest request) {
         Card card = Card.builder()
                 .title(request.getTitle())
                 .description(request.getDescription())
                 .taskList(taskListService.getTaskListBy(listId))
                 .build();
 
-        cardRepository.save(card);
+        return cardDtoConverter.convertTo(cardRepository.save(card));
     }
 
     public List<CardDTO> getCards(Integer listId) {
@@ -41,7 +40,7 @@ public class CardService {
                 .orElse(Collections.emptyList());
 
         return cards.stream()
-                .map(card -> new CardDTO(card.getId(), card.getTitle(), card.getDescription()))
+                .map(card -> new CardDTO(card.getId(), card.getTaskList().getId(), card.getTitle(), card.getDescription()))
                 .collect(Collectors.toList());
     }
 

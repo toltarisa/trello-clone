@@ -24,7 +24,7 @@ public class TaskList {
     @Column
     String name;
 
-    @OneToMany(mappedBy = "taskList", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "taskList", fetch = FetchType.LAZY, cascade = CascadeType.REMOVE)
     Set<Card> cards;
 
     @ManyToOne
